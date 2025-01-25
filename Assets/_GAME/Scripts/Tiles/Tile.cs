@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using Scripts.Event;
+using Scripts.Event.Events;
+using UnityEngine;
 
 namespace Scripts.Tiles
 {
@@ -6,17 +9,28 @@ namespace Scripts.Tiles
     {
         public SpriteRenderer spriteRenderer;
         public Vector2Int GridPosition { get; set; }
-        private int colorID;
+        private TileData tileData;
+        private int thresholdA;
+        private int thresholdB;
+        private int thresholdC;
 
-        public void Initialize(int color, Sprite[] icons)
+        private void OnMouseDown()
         {
-            colorID = color;
-            spriteRenderer.sprite = icons[color];
+            EventBus<TileClickedEvent>.Emit(this, new TileClickedEvent{ClickedTile = this});
+        }
+
+        public void Initialize(TileData data, int tA, int tB, int tC)
+        {
+            tileData = data;
+            spriteRenderer.sprite = data.defaultIcon;
+            thresholdA = tA;
+            thresholdB = tB;
+            thresholdC = tC;
         }
 
         public bool IsSameColor(Tile otherTile)
         {
-            return otherTile != null && colorID == otherTile.colorID;
+            return otherTile != null && tileData == otherTile.tileData;
         }
 
         public void ClearTile()
@@ -28,6 +42,25 @@ namespace Scripts.Tiles
         {
             transform.position = targetPosition;
         }
-    }
 
+        public void AssignIcon(int groupSize)
+        {
+            if (groupSize >= thresholdC)
+            {
+                spriteRenderer.sprite = tileData.iconC;
+            }
+            else if (groupSize >= thresholdB)
+            {
+                spriteRenderer.sprite = tileData.iconB;
+            }
+            else if (groupSize >= thresholdA)
+            {
+                spriteRenderer.sprite = tileData.iconA;
+            }
+            else
+            {
+                spriteRenderer.sprite = tileData.defaultIcon;
+            }
+        }
+    }
 }
