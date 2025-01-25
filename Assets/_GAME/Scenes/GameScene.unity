@@ -152,19 +152,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rows: 6
-  columns: 3
-  colorsCount: 6
+  columns: 10
   tilePrefab: {fileID: 8581257674477615686, guid: a6b83c1a3bcdf014b861cc544334f4a3, type: 3}
-  colorIcons:
-  - {fileID: 21300000, guid: 4d3e0605d1531284cb3a53ffd20567bd, type: 3}
-  - {fileID: 21300000, guid: baed0cc38e58934439c703ee6b84cba6, type: 3}
-  - {fileID: 21300000, guid: de2de83779d70824ab756c05afe07ca1, type: 3}
-  - {fileID: 21300000, guid: 9a21623a8b96774498d7f2d8bbfb4858, type: 3}
-  - {fileID: 21300000, guid: bf37c6056e2287b4b92f54b72f3fcad7, type: 3}
-  - {fileID: 21300000, guid: ee7759f67f944f143a736ebfb6ef16b9, type: 3}
-  thresholdA: 4
-  thresholdB: 7
-  thresholdC: 10
+  tileDataList:
+  - {fileID: 11400000, guid: d1de639af2a2ae345993ae518dc343dc, type: 2}
+  - {fileID: 11400000, guid: 8175e60fa9302c24e873082f6e9055ce, type: 2}
+  - {fileID: 11400000, guid: 5bd8c33b8fc7e634f80b97d829cd29ec, type: 2}
+  - {fileID: 11400000, guid: 8f4e646a7292d0c43bd1c569b137130a, type: 2}
+  - {fileID: 11400000, guid: 788b9b9e83d99e44fbb059fd43b1692d, type: 2}
+  - {fileID: 11400000, guid: 81b46ad619d3516469b560bd9c7d4f09, type: 2}
+  thresholdA: 2
+  thresholdB: 3
+  thresholdC: 4
 --- !u!4 &741866164
 Transform:
   m_ObjectHideFlags: 0
