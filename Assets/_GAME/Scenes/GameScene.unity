@@ -151,8 +151,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0281de91bd4f45ad96295ce54d4223a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rows: 6
-  columns: 10
+  rows: 3
+  columns: 6
   tilePrefab: {fileID: 8581257674477615686, guid: a6b83c1a3bcdf014b861cc544334f4a3, type: 3}
   tileDataList:
   - {fileID: 11400000, guid: d1de639af2a2ae345993ae518dc343dc, type: 2}
@@ -164,6 +164,7 @@ MonoBehaviour:
   thresholdA: 2
   thresholdB: 3
   thresholdC: 4
+  fallDuration: 0.5
 --- !u!4 &741866164
 Transform:
   m_ObjectHideFlags: 0
@@ -308,7 +309,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 8
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
