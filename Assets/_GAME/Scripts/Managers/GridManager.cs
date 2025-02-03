@@ -124,8 +124,15 @@ namespace Scripts.Managers
             tile.Initialize(tileDataList[colorIndex], _thresholdA, _thresholdB, _thresholdC);
             tile.GridPosition = new Vector2Int(row, column);
 
+            SpriteRenderer spriteRenderer = tileObject.GetComponent<SpriteRenderer>();
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.sortingOrder = _rows - row;
+            }
+
             _grid[row, column] = tile;
         }
+
 
         private void OnTileClicked(object sender, TileClickedEvent @event)
         {
@@ -297,6 +304,12 @@ namespace Scripts.Managers
                         int colorIndex = Random.Range(0, tileDataList.Count);
                         tile.Initialize(tileDataList[colorIndex], _thresholdA, _thresholdB, _thresholdC);
                         tile.GridPosition = new Vector2Int(row, column);
+
+                        SpriteRenderer spriteRenderer = tileObject.GetComponent<SpriteRenderer>();
+                        if (spriteRenderer != null)
+                        {
+                            spriteRenderer.sortingOrder = _rows - row;
+                        }
 
                         _grid[row, column] = tile;
                         tile.transform.DOMove(GetWorldPosition(row, column), fallDuration);
