@@ -77,7 +77,7 @@ namespace Scripts.Managers
                 return;
             }
 
-            _tileSize = spriteRenderer.bounds.size;
+            _tileSize = spriteRenderer.bounds.size / 1.15f;
         }
 
         private void CreateGrid()
@@ -85,8 +85,8 @@ namespace Scripts.Managers
             _grid = new Tile[_rows, _columns];
 
             _gridStartPosition = new Vector2(
-                transform.position.x - (_columns * _tileSize.x) / 2f + _tileSize.x / 2f,
-                transform.position.y + (_rows * _tileSize.y) / 2f - _tileSize.y / 2f
+                transform.position.x - _columns / 2f * _tileSize.x + _tileSize.x / 2f,
+                transform.position.y + _rows / 2f * _tileSize.y - _tileSize.y / 2f
             );
 
             for (int row = 0; row < _rows; row++)
