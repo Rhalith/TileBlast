@@ -2,6 +2,7 @@
 using DG.Tweening;
 using Scripts.Event;
 using Scripts.Event.Events;
+using Scripts.Level;
 using Scripts.Tiles;
 using Scripts.Utilities;
 using UnityEngine;
@@ -9,18 +10,19 @@ using Random = UnityEngine.Random;
 
 namespace Scripts.Managers
 {
+
     public class GridManager : MonoBehaviour
     {
-        [SerializeField] private int rows = 10;
-        [SerializeField] private int columns = 12;
         [SerializeField] private GameObject tilePrefab;
-
         [SerializeField] private List<TileData> tileDataList;
-        [SerializeField] private int thresholdA = 4;
-        [SerializeField] private int thresholdB = 7;
-        [SerializeField] private int thresholdC = 10;
         [SerializeField] private float fallDuration = 0.5f;
 
+        private int _rows;
+        private int _columns;
+        private int _thresholdA;
+        private int _thresholdB;
+        private int _thresholdC;
+        private int _allowedMoves;
         private Tile[,] _grid;
         private Vector2 _tileSize;
         private Vector2 _gridStartPosition;
@@ -35,8 +37,27 @@ namespace Scripts.Managers
             EventBus<TileClickedEvent>.RemoveListener(OnTileClicked);
         }
 
-        private void Start()
+        public void InitializeGrid(LevelData levelData)
         {
+            if (levelData == null)
+            {
+                Debug.LogError("GridManager: No Level Data provided!");
+                return;
+            }
+
+            _rows = levelData.Rows;
+            _columns = levelData.Columns;
+            _thresholdA = levelData.GroupThresholdA;
+            _thresholdB = levelData.GroupThresholdB;
+            _thresholdC = levelData.GroupThresholdC;
+            _allowedMoves = levelData.AllowedMoves; // Assign allowed moves
+
+            // Ensure TileData count matches numColors
+            if (tileDataList.Count > levelData.NumColors)
+            {
+                tileDataList = tileDataList.GetRange(0, levelData.NumColors);
+            }
+
             CalculateTileSize();
             CreateGrid();
         }
@@ -61,16 +82,16 @@ namespace Scripts.Managers
 
         private void CreateGrid()
         {
-            _grid = new Tile[rows, columns];
+            _grid = new Tile[_rows, _columns];
 
             _gridStartPosition = new Vector2(
-                transform.position.x - (columns * _tileSize.x) / 2f + _tileSize.x / 2f,
-                transform.position.y + (rows * _tileSize.y) / 2f - _tileSize.y / 2f
+                transform.position.x - (_columns * _tileSize.x) / 2f + _tileSize.x / 2f,
+                transform.position.y + (_rows * _tileSize.y) / 2f - _tileSize.y / 2f
             );
 
-            for (int row = 0; row < rows; row++)
+            for (int row = 0; row < _rows; row++)
             {
-                for (int column = 0; column < columns; column++)
+                for (int column = 0; column < _columns; column++)
                 {
                     SpawnTile(row, column);
                 }
@@ -100,20 +121,20 @@ namespace Scripts.Managers
 
             Tile tile = tileObject.GetComponent<Tile>();
             int colorIndex = Random.Range(0, tileDataList.Count);
-            tile.Initialize(tileDataList[colorIndex], thresholdA, thresholdB, thresholdC);
+            tile.Initialize(tileDataList[colorIndex], _thresholdA, _thresholdB, _thresholdC);
             tile.GridPosition = new Vector2Int(row, column);
-
-            SpriteRenderer spriteRenderer = tileObject.GetComponent<SpriteRenderer>();
-            if (spriteRenderer != null)
-            {
-                spriteRenderer.sortingOrder = rows - row;
-            }
 
             _grid[row, column] = tile;
         }
 
         private void OnTileClicked(object sender, TileClickedEvent @event)
         {
+            if (_allowedMoves <= 0)
+            {
+                Debug.Log("No more moves left!");
+                return;
+            }
+
             List<Tile> group = GetConnectedTiles(@event.ClickedTile);
 
             if (group.Count >= 2)
@@ -123,6 +144,9 @@ namespace Scripts.Managers
                     _grid[tile.GridPosition.x, tile.GridPosition.y] = null;
                     tile.ClearTile();
                 }
+
+                _allowedMoves--; // Decrease move count on valid tile match
+                Debug.Log($"Moves Left: {_allowedMoves}");
 
                 CollapseGrid();
                 FillGrid();
@@ -143,6 +167,7 @@ namespace Scripts.Managers
                     return false;
                 }
             }
+
             return true;
         }
 
@@ -161,9 +186,9 @@ namespace Scripts.Managers
             allTiles.Shuffle();
 
             int index = 0;
-            for (int row = 0; row < rows; row++)
+            for (int row = 0; row < _rows; row++)
             {
-                for (int col = 0; col < columns; col++)
+                for (int col = 0; col < _columns; col++)
                 {
                     _grid[row, col] = allTiles[index];
                     _grid[row, col].GridPosition = new Vector2Int(row, col);
@@ -175,14 +200,13 @@ namespace Scripts.Managers
             AssignGroupIcons();
         }
 
-
         private void AssignGroupIcons()
         {
             HashSet<Tile> processedTiles = new HashSet<Tile>();
 
-            for (int row = 0; row < rows; row++)
+            for (int row = 0; row < _rows; row++)
             {
-                for (int column = 0; column < columns; column++)
+                for (int column = 0; column < _columns; column++)
                 {
                     Tile currentTile = _grid[row, column];
                     if (currentTile == null || processedTiles.Contains(currentTile)) continue;
@@ -228,18 +252,18 @@ namespace Scripts.Managers
             Vector2Int tilePos = tile.GridPosition;
 
             if (tilePos.x > 0) yield return _grid[tilePos.x - 1, tilePos.y];
-            if (tilePos.x < rows - 1) yield return _grid[tilePos.x + 1, tilePos.y];
+            if (tilePos.x < _rows - 1) yield return _grid[tilePos.x + 1, tilePos.y];
             if (tilePos.y > 0) yield return _grid[tilePos.x, tilePos.y - 1];
-            if (tilePos.y < columns - 1) yield return _grid[tilePos.x, tilePos.y + 1];
+            if (tilePos.y < _columns - 1) yield return _grid[tilePos.x, tilePos.y + 1];
         }
-        
+
         private void CollapseGrid()
         {
-            for (int column = 0; column < columns; column++)
+            for (int column = 0; column < _columns; column++)
             {
                 int emptyCount = 0;
 
-                for (int row = rows - 1; row >= 0; row--)
+                for (int row = _rows - 1; row >= 0; row--)
                 {
                     if (_grid[row, column] == null)
                     {
@@ -260,9 +284,9 @@ namespace Scripts.Managers
 
         private void FillGrid()
         {
-            for (int column = 0; column < columns; column++)
+            for (int column = 0; column < _columns; column++)
             {
-                for (int row = 0; row < rows; row++)
+                for (int row = 0; row < _rows; row++)
                 {
                     if (_grid[row, column] == null)
                     {
@@ -271,14 +295,8 @@ namespace Scripts.Managers
 
                         Tile tile = tileObject.GetComponent<Tile>();
                         int colorIndex = Random.Range(0, tileDataList.Count);
-                        tile.Initialize(tileDataList[colorIndex], thresholdA, thresholdB, thresholdC);
+                        tile.Initialize(tileDataList[colorIndex], _thresholdA, _thresholdB, _thresholdC);
                         tile.GridPosition = new Vector2Int(row, column);
-
-                        SpriteRenderer spriteRenderer = tileObject.GetComponent<SpriteRenderer>();
-                        if (spriteRenderer != null)
-                        {
-                            spriteRenderer.sortingOrder = rows - row;
-                        }
 
                         _grid[row, column] = tile;
                         tile.transform.DOMove(GetWorldPosition(row, column), fallDuration);
@@ -288,6 +306,6 @@ namespace Scripts.Managers
 
             AssignGroupIcons();
         }
-
     }
+
 }

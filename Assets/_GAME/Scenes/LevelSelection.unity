@@ -482,13 +482,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1feba74de8e440218e1335b4ec8572c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startLevel: 2
   levelButtons:
   - {fileID: 1183592736}
   - {fileID: 809147925}
   - {fileID: 432326977}
   - {fileID: 1621391379}
   - {fileID: 917895576}
+  levelDataList:
+  - {fileID: 11400000, guid: 89daf25923e681142961222b02cb48b1, type: 2}
+  - {fileID: 11400000, guid: 3a94878063db63b408a2212412196655, type: 2}
+  - {fileID: 11400000, guid: 5a11f9265f3c60c4096e2e2a9f143080, type: 2}
+  - {fileID: 11400000, guid: 121dc318e851255469e821bb8c47c255, type: 2}
+  - {fileID: 11400000, guid: 0ecdffeffde46ff48a6fd8300031351f, type: 2}
+  gameSceneName: GameScene
 --- !u!1 &545791260
 GameObject:
   m_ObjectHideFlags: 0
