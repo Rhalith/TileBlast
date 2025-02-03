@@ -26,6 +26,8 @@ namespace Scripts.Managers
         private Tile[,] _grid;
         private Vector2 _tileSize;
         private Vector2 _gridStartPosition;
+        private int _lastScreenWidth;
+        private int _lastScreenHeight;
 
         private void OnEnable()
         {
@@ -70,23 +72,33 @@ namespace Scripts.Managers
                 return;
             }
 
-            SpriteRenderer spriteRenderer = tilePrefab.GetComponent<SpriteRenderer>();
-            if (spriteRenderer == null)
-            {
-                Debug.LogError("Tile Prefab does not have a SpriteRenderer component.");
-                return;
-            }
+            float screenRatio = (float)Screen.width / Screen.height;
+            float cameraHeight = Camera.main.orthographicSize * 2;
+            float cameraWidth = cameraHeight * screenRatio;
 
-            _tileSize = spriteRenderer.bounds.size / 1.15f;
+            // Reduce the spacing by adding a scale factor
+            float spacingFactor = 0.95f; // Adjust this value (0.9 - 0.98 for tighter fit)
+    
+            float tileWidth = (cameraWidth / _columns) * spacingFactor;
+            float tileHeight = (cameraHeight / _rows) * spacingFactor;
+
+            float tileSize = Mathf.Min(tileWidth, tileHeight);
+            _tileSize = new Vector2(tileSize, tileSize);
         }
+
+
+
 
         private void CreateGrid()
         {
             _grid = new Tile[_rows, _columns];
 
+            float gridWidth = _tileSize.x * _columns;
+            float gridHeight = _tileSize.y * _rows;
+
             _gridStartPosition = new Vector2(
-                transform.position.x - _columns / 2f * _tileSize.x + _tileSize.x / 2f,
-                transform.position.y + _rows / 2f * _tileSize.y - _tileSize.y / 2f
+                transform.position.x - gridWidth / 2 + _tileSize.x / 2,
+                transform.position.y + gridHeight / 2 - _tileSize.y / 2
             );
 
             for (int row = 0; row < _rows; row++)
@@ -105,6 +117,8 @@ namespace Scripts.Managers
             }
         }
 
+
+
         private Vector2 GetWorldPosition(int row, int column)
         {
             float x = _gridStartPosition.x + column * _tileSize.x;
@@ -116,6 +130,17 @@ namespace Scripts.Managers
         {
             Vector2 tilePosition = GetWorldPosition(row, column);
             GameObject tileObject = Instantiate(tilePrefab, tilePosition, Quaternion.identity, transform);
+
+            float prefabSizeX = tilePrefab.GetComponent<SpriteRenderer>().bounds.size.x;
+            float prefabSizeY = tilePrefab.GetComponent<SpriteRenderer>().bounds.size.y;
+
+            float scaleFactor = 1.15f; // Increase this for a tighter fit (1.05 - 1.1)
+
+            tileObject.transform.localScale = new Vector3(
+                (_tileSize.x / prefabSizeX) * scaleFactor, 
+                (_tileSize.y / prefabSizeY) * scaleFactor, 
+                1f
+            );
 
             tileObject.name = $"{row} {column}";
 
