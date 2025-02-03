@@ -78,15 +78,13 @@ namespace Scripts.Managers
 
             // Reduce the spacing by adding a scale factor
             float spacingFactor = 0.95f; // Adjust this value (0.9 - 0.98 for tighter fit)
-    
+
             float tileWidth = (cameraWidth / _columns) * spacingFactor;
             float tileHeight = (cameraHeight / _rows) * spacingFactor;
 
             float tileSize = Mathf.Min(tileWidth, tileHeight);
             _tileSize = new Vector2(tileSize, tileSize);
         }
-
-
 
 
         private void CreateGrid()
@@ -118,7 +116,6 @@ namespace Scripts.Managers
         }
 
 
-
         private Vector2 GetWorldPosition(int row, int column)
         {
             float x = _gridStartPosition.x + column * _tileSize.x;
@@ -137,8 +134,8 @@ namespace Scripts.Managers
             float scaleFactor = 1.15f; // Increase this for a tighter fit (1.05 - 1.1)
 
             tileObject.transform.localScale = new Vector3(
-                (_tileSize.x / prefabSizeX) * scaleFactor, 
-                (_tileSize.y / prefabSizeY) * scaleFactor, 
+                (_tileSize.x / prefabSizeX) * scaleFactor,
+                (_tileSize.y / prefabSizeY) * scaleFactor,
                 1f
             );
 
@@ -309,6 +306,8 @@ namespace Scripts.Managers
 
                         tile.GridPosition = new Vector2Int(row + emptyCount, column);
                         tile.transform.DOMove(GetWorldPosition(row + emptyCount, column), fallDuration);
+                        tile.GetComponent<SpriteRenderer>().sortingOrder = _rows - tile.GridPosition.x;
+                        tile.name = $"{tile.GridPosition.x} {tile.GridPosition.y}";
                     }
                 }
             }
@@ -330,19 +329,27 @@ namespace Scripts.Managers
                         tile.Initialize(tileDataList[colorIndex], _thresholdA, _thresholdB, _thresholdC);
                         tile.GridPosition = new Vector2Int(row, column);
 
+                        float prefabSizeX = tilePrefab.GetComponent<SpriteRenderer>().bounds.size.x;
+                        float prefabSizeY = tilePrefab.GetComponent<SpriteRenderer>().bounds.size.y;
+                        tileObject.transform.localScale = new Vector3(
+                            (_tileSize.x / prefabSizeX) * 1.15f,
+                            (_tileSize.y / prefabSizeY) * 1.15f,
+                            1f
+                        );
+
+                        _grid[row, column] = tile;
+                        tile.transform.DOMove(GetWorldPosition(row, column), fallDuration);
+                        tile.GetComponent<SpriteRenderer>().sortingOrder = _rows - tile.GridPosition.x;
+                        tile.name = $"{tile.GridPosition.x} {tile.GridPosition.y}";
                         SpriteRenderer spriteRenderer = tileObject.GetComponent<SpriteRenderer>();
                         if (spriteRenderer != null)
                         {
                             spriteRenderer.sortingOrder = _rows - row;
                         }
-
-                        _grid[row, column] = tile;
-                        tile.transform.DOMove(GetWorldPosition(row, column), fallDuration);
+                        AssignGroupIcons();
                     }
                 }
             }
-
-            AssignGroupIcons();
         }
     }
 
