@@ -1,4 +1,5 @@
-﻿using Scripts.Event;
+﻿using System;
+using Scripts.Event;
 using Scripts.Event.Events;
 using UnityEngine;
 
@@ -6,6 +7,7 @@ namespace Scripts.Tiles
 {
     public class Tile : MonoBehaviour
     {
+        [SerializeField] private BoxCollider2D boxCollider;
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private GameObject particleEffectPrefab; // Prefab that contains TileParticleController
         
@@ -14,6 +16,21 @@ namespace Scripts.Tiles
         private int _thresholdA;
         private int _thresholdB;
         private int _thresholdC;
+
+        private void OnEnable()
+        {
+            EventBus<FinishGameEvent>.AddListener(ChangeTileStatus);
+        }
+        
+        private void OnDisable()
+        {
+            EventBus<FinishGameEvent>.RemoveListener(ChangeTileStatus);
+        }
+
+        private void ChangeTileStatus(object sender, FinishGameEvent @event)
+        {
+            boxCollider.enabled = false;
+        }
 
         private void OnMouseDown()
         {

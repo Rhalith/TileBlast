@@ -4,6 +4,8 @@ using Scripts.Event.Events;
 using TMPro;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 namespace Scripts.Managers
 {
@@ -49,9 +51,15 @@ namespace Scripts.Managers
                 scoreText.text = e.ScoreChange.ToString();
                 return;
             }
+            
             DOTween.Kill(scoreText, true);
 
             _actualScore = Mathf.Max(0, _actualScore - e.ScoreChange);
+
+            if (_actualScore <= 0)
+            {
+                EventBus<FinishGameEvent>.Emit(this, new FinishGameEvent { IsWin = true });
+            }
 
             DOTween.To(() => float.Parse(scoreText.text), x =>
                 {

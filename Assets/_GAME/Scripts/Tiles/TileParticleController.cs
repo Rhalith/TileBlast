@@ -26,6 +26,7 @@ namespace Scripts.Tiles
                 SpriteRenderer particleRenderer = particle.AddComponent<SpriteRenderer>();
 
                 particleRenderer.sprite = tileRenderer.sprite == tileData.iconC ? tileData.shinyParticle : tileData.particle;
+                particleRenderer.sortingLayerName = "Particles";
                 particleRenderer.sortingOrder = tileRenderer.sortingOrder + 10;
 
                 // Set random position offset around the tile

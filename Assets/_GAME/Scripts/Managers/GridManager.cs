@@ -30,16 +30,24 @@ namespace Scripts.Managers
         private Vector2 _gridStartPosition;
         private int _lastScreenWidth;
         private int _lastScreenHeight;
+        private bool _isGameFinished;
 
 
         private void OnEnable()
         {
+            EventBus<FinishGameEvent>.AddListener(OnGameFinished);
             EventBus<TileClickedEvent>.AddListener(OnTileClicked);
         }
 
         private void OnDisable()
         {
+            EventBus<FinishGameEvent>.RemoveListener(OnGameFinished);
             EventBus<TileClickedEvent>.RemoveListener(OnTileClicked);
+        }
+
+        private void OnGameFinished(object sender, FinishGameEvent @event)
+        {
+            _isGameFinished = true;
         }
 
         public void InitializeGrid(LevelData levelData)
@@ -170,7 +178,7 @@ namespace Scripts.Managers
         {
             if (_allowedMoves <= 0)
             {
-                Debug.Log("No more moves left!");
+                EventBus<FinishGameEvent>.Emit(this, new FinishGameEvent { IsWin = false });
                 return;
             }
 
@@ -191,6 +199,10 @@ namespace Scripts.Managers
                 _allowedMoves--;
                 EventBus<ChangeMovementTextEvent>.Emit(this,
                     new ChangeMovementTextEvent { MovementCount = _allowedMoves });
+                if(_allowedMoves <= 0 && !_isGameFinished)
+                {
+                    EventBus<FinishGameEvent>.Emit(this, new FinishGameEvent { IsWin = false });
+                }
 
                 CollapseGrid();
                 FillGrid();
