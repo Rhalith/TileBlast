@@ -1,5 +1,4 @@
-﻿using System;
-using Scripts.Event;
+﻿using Scripts.Event;
 using Scripts.Event.Events;
 using UnityEngine;
 
@@ -7,30 +6,32 @@ namespace Scripts.Tiles
 {
     public class Tile : MonoBehaviour
     {
-        public SpriteRenderer spriteRenderer;
+        [SerializeField] private SpriteRenderer spriteRenderer;
+        [SerializeField] private GameObject particleEffectPrefab; // Prefab that contains TileParticleController
+        
         public Vector2Int GridPosition { get; set; }
-        private TileData tileData;
-        private int thresholdA;
-        private int thresholdB;
-        private int thresholdC;
+        private TileData _tileData;
+        private int _thresholdA;
+        private int _thresholdB;
+        private int _thresholdC;
 
         private void OnMouseDown()
         {
-            EventBus<TileClickedEvent>.Emit(this, new TileClickedEvent{ClickedTile = this});
+            EventBus<TileClickedEvent>.Emit(this, new TileClickedEvent { ClickedTile = this });
         }
 
         public void Initialize(TileData data, int tA, int tB, int tC)
         {
-            tileData = data;
+            _tileData = data;
             spriteRenderer.sprite = data.defaultIcon;
-            thresholdA = tA;
-            thresholdB = tB;
-            thresholdC = tC;
+            _thresholdA = tA;
+            _thresholdB = tB;
+            _thresholdC = tC;
         }
 
         public bool IsSameColor(Tile otherTile)
         {
-            return otherTile != null && tileData == otherTile.tileData;
+            return otherTile != null && _tileData == otherTile._tileData;
         }
 
         public void ClearTile()
@@ -38,28 +39,37 @@ namespace Scripts.Tiles
             Destroy(gameObject);
         }
 
-        public void MoveTo(Vector2 targetPosition)
+        public void SpawnParticleEffect()
         {
-            transform.position = targetPosition;
+            if (particleEffectPrefab != null)
+            {
+                GameObject particleInstance = Instantiate(particleEffectPrefab, transform.position, Quaternion.identity);
+                TileParticleController particleController = particleInstance.GetComponent<TileParticleController>();
+
+                if (particleController != null)
+                {
+                    particleController.PlayEffect(_tileData, spriteRenderer);
+                }
+            }
         }
 
         public void AssignIcon(int groupSize)
         {
-            if (groupSize >= thresholdC)
+            if (groupSize >= _thresholdC)
             {
-                spriteRenderer.sprite = tileData.iconC;
+                spriteRenderer.sprite = _tileData.iconC;
             }
-            else if (groupSize >= thresholdB)
+            else if (groupSize >= _thresholdB)
             {
-                spriteRenderer.sprite = tileData.iconB;
+                spriteRenderer.sprite = _tileData.iconB;
             }
-            else if (groupSize >= thresholdA)
+            else if (groupSize >= _thresholdA)
             {
-                spriteRenderer.sprite = tileData.iconA;
+                spriteRenderer.sprite = _tileData.iconA;
             }
             else
             {
-                spriteRenderer.sprite = tileData.defaultIcon;
+                spriteRenderer.sprite = _tileData.defaultIcon;
             }
         }
     }

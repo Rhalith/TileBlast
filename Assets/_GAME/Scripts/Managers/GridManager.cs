@@ -168,6 +168,7 @@ namespace Scripts.Managers
 
             if (group.Count >= 2)
             {
+                @event.ClickedTile.SpawnParticleEffect();
                 foreach (Tile tile in group)
                 {
                     _grid[tile.GridPosition.x, tile.GridPosition.y] = null;

@@ -10,5 +10,7 @@
         public Sprite iconA;       // Icon for threshold A
         public Sprite iconB;       // Icon for threshold B
         public Sprite iconC;       // Icon for threshold C
+        public Sprite particle;    // Particle effect for this color    
+        public Sprite shinyParticle; // Shiny particle effect for this color
     }
 }

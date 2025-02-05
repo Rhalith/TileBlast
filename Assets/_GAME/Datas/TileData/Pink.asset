@@ -16,3 +16,5 @@ MonoBehaviour:
   iconA: {fileID: 21300000, guid: de2de83779d70824ab756c05afe07ca1, type: 3}
   iconB: {fileID: 21300000, guid: 643dc12a674b5164c81d591ad7cc7fad, type: 3}
   iconC: {fileID: 21300000, guid: ff4a1c830cbbf7345b725545d47d7efc, type: 3}
+  particle: {fileID: 491856107, guid: c8dfd1c371843ae4f8ee70e7ff2dcd48, type: 3}
+  shinyParticle: {fileID: -10287537, guid: 10deeaa89546f2d4e9029100e63942e7, type: 3}

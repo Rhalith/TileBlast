@@ -99,6 +99,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 226074494739456166}
+  particleEffectPrefab: {fileID: 70913992030646066, guid: 390e19e3e21072943888e70516b48033, type: 3}
 --- !u!61 &2526442096134979272
 BoxCollider2D:
   m_ObjectHideFlags: 0
