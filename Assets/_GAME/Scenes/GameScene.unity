@@ -705,6 +705,7 @@ MonoBehaviour:
   scoreAnimationDuration: 0.5
   movementAnimationDuration: 0.3
   movementScaleFactor: 1.2
+  mainMenuSceneName: LevelSelection
 --- !u!1 &1103383010
 GameObject:
   m_ObjectHideFlags: 0
@@ -968,7 +969,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
+  m_IgnoreReversedGraphics: 0
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
@@ -1122,7 +1123,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2093827259}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1084814375}
+        m_TargetAssemblyTypeName: Scripts.Managers.UIManager, Assembly-CSharp
+        m_MethodName: BackToMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2093827259
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1139,7 +1152,7 @@ MonoBehaviour:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
+  m_Maskable: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []

@@ -14,6 +14,7 @@ namespace Scripts.Managers
         [SerializeField] private float scoreAnimationDuration = 0.5f;
         [SerializeField] private float movementAnimationDuration = 0.3f;
         [SerializeField] private float movementScaleFactor = 1.2f;
+        [SerializeField] private string mainMenuSceneName = "LevelSelection";
         
         private float _actualScore;
         private float _currentMovementTextScale;
@@ -33,6 +34,11 @@ namespace Scripts.Managers
         {
             EventBus<ChangeScoreTextEvent>.RemoveListener(ChangeScoreText);
             EventBus<ChangeMovementTextEvent>.RemoveListener(ChangeMovementText);
+        }
+        
+        public void BackToMenu()
+        {
+            SceneManager.LoadScene(mainMenuSceneName);
         }
 
         private void ChangeScoreText(object sender, ChangeScoreTextEvent e)
