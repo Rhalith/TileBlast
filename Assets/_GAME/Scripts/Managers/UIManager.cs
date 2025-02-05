@@ -1,11 +1,9 @@
-﻿using System;
-using Scripts.Event;
+﻿using Scripts.Event;
 using Scripts.Event.Events;
 using TMPro;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.SceneManagement;
-using UnityEngine.Serialization;
 
 namespace Scripts.Managers
 {

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Scripts.Level;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Scripts.Managers
 {
