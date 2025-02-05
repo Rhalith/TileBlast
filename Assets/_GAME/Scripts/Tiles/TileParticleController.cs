@@ -1,5 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using DG.Tweening;
+using Random = UnityEngine.Random;
 
 namespace Scripts.Tiles
 {   
@@ -8,6 +10,11 @@ namespace Scripts.Tiles
         [SerializeField] private int minParticles = 6;
         [SerializeField] private int maxParticles = 8;
         [SerializeField] private float moveDuration = 0.6f; // Extended for better gravity effect
+
+        private void Start()
+        {
+            Destroy(gameObject, moveDuration + 0.3f);
+        }
 
         public void PlayEffect(TileData tileData, SpriteRenderer tileRenderer)
         {
