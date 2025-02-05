@@ -13,7 +13,7 @@ namespace Scripts.Managers
         private void Start()
         {
 
-            int selectedLevel = PlayerPrefs.GetInt("SelectedLevel", 0); // Default to first level
+            int selectedLevel = PlayerPrefs.GetInt("SelectedLevel", 0);
             if (selectedLevel < levelDataList.Count)
             {
                 gridManager.InitializeGrid(levelDataList[selectedLevel]);

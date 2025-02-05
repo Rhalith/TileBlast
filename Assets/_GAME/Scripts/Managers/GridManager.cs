@@ -70,8 +70,7 @@ namespace Scripts.Managers
             
             EventBus<ChangeScoreTextEvent>.Emit(this,
                 new ChangeScoreTextEvent { ScoreChange = _targetScore, IsInitial = true });
-
-            // Ensure TileData count matches numColors
+            
             if (tileDataList.Count > levelData.NumColors)
             {
                 tileDataList = tileDataList.GetRange(0, levelData.NumColors);
@@ -93,8 +92,7 @@ namespace Scripts.Managers
             float cameraHeight = Camera.main.orthographicSize * 2;
             float cameraWidth = cameraHeight * screenRatio;
 
-            // Reduce the spacing by adding a scale factor
-            float spacingFactor = 0.95f; // Adjust this value (0.9 - 0.98 for tighter fit)
+            float spacingFactor = 0.95f;
 
             float tileWidth = (cameraWidth / _columns) * spacingFactor;
             float tileHeight = (cameraHeight / _rows) * spacingFactor;

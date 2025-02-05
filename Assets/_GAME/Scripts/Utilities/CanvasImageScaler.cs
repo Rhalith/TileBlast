@@ -39,17 +39,14 @@ namespace Scripts.Utilities
 
         private void AdjustImageSize()
         {
-            // Get screen dimensions and ratios
             float screenWidth = Screen.width;
             float screenHeight = Screen.height;
             float screenRatio = screenWidth / screenHeight;
 
-            // Get sprite size and ratio
             Sprite sprite = targetImage.sprite;
             Vector2 spriteSize = sprite.bounds.size;
             float imageRatio = spriteSize.x / spriteSize.y;
 
-            // Compute new size based on screen and image ratios
             float newWidth, newHeight;
             if (screenRatio >= imageRatio)
             {
@@ -62,7 +59,6 @@ namespace Scripts.Utilities
                 newHeight = screenHeight;
             }
             
-            // Compare with previous size; if the new size is smaller, scale it up by 1.5.
             Vector2 previousSize = targetRect.sizeDelta;
             if (previousSize.x > newWidth)
             {

@@ -8,7 +8,7 @@ namespace Scripts.Tiles
     {
         [SerializeField] private BoxCollider2D boxCollider;
         [SerializeField] private SpriteRenderer spriteRenderer;
-        [SerializeField] private GameObject particleEffectPrefab; // Prefab that contains TileParticleController
+        [SerializeField] private GameObject particleEffectPrefab;
         
         public Vector2Int GridPosition { get; set; }
         private TileData _tileData;

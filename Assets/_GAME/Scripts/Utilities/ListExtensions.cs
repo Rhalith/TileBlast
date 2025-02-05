@@ -5,7 +5,7 @@ namespace Scripts.Utilities
 {
     public static class ListExtensions
     {
-        private static Random _random = new Random();
+        private static readonly Random Random = new();
 
         public static void Shuffle<T>(this IList<T> list)
         {
@@ -13,8 +13,8 @@ namespace Scripts.Utilities
             while (n > 1)
             {
                 n--;
-                int k = _random.Next(n + 1);
-                (list[k], list[n]) = (list[n], list[k]); // Swap elements
+                int k = Random.Next(n + 1);
+                (list[k], list[n]) = (list[n], list[k]);
             }
         }
     }

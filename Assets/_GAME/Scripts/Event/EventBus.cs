@@ -5,7 +5,7 @@ namespace Scripts.Event
 
     public static class EventBus<TEvent>
     {
-        private static readonly List<EventListener<TEvent>> Listeners = new List<EventListener<TEvent>>();
+        private static readonly List<EventListener<TEvent>> Listeners = new();
 
         public static void AddListener(EventListener<TEvent> eventListener)
         {
