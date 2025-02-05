@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DG.Tweening;
 using Scripts.Event;
 using Scripts.Event.Events;
@@ -23,11 +24,13 @@ namespace Scripts.Managers
         private int _thresholdB;
         private int _thresholdC;
         private int _allowedMoves;
+        private float _targetScore;
         private Tile[,] _grid;
         private Vector2 _tileSize;
         private Vector2 _gridStartPosition;
         private int _lastScreenWidth;
         private int _lastScreenHeight;
+
 
         private void OnEnable()
         {
@@ -52,7 +55,14 @@ namespace Scripts.Managers
             _thresholdA = levelData.GroupThresholdA;
             _thresholdB = levelData.GroupThresholdB;
             _thresholdC = levelData.GroupThresholdC;
-            _allowedMoves = levelData.AllowedMoves; // Assign allowed moves
+            _allowedMoves = levelData.AllowedMoves;
+            _targetScore = levelData.TargetScore;
+
+            EventBus<ChangeMovementTextEvent>.Emit(this,
+                new ChangeMovementTextEvent { MovementCount = _allowedMoves, IsInitial = true });
+            
+            EventBus<ChangeScoreTextEvent>.Emit(this,
+                new ChangeScoreTextEvent { ScoreChange = _targetScore, IsInitial = true });
 
             // Ensure TileData count matches numColors
             if (tileDataList.Count > levelData.NumColors)
@@ -175,8 +185,12 @@ namespace Scripts.Managers
                     tile.ClearTile();
                 }
 
-                _allowedMoves--; // Decrease move count on valid tile match
-                Debug.Log($"Moves Left: {_allowedMoves}");
+                EventBus<ChangeScoreTextEvent>.Emit(this,
+                    new ChangeScoreTextEvent { ScoreChange = group.Count * 100 });
+                
+                _allowedMoves--;
+                EventBus<ChangeMovementTextEvent>.Emit(this,
+                    new ChangeMovementTextEvent { MovementCount = _allowedMoves });
 
                 CollapseGrid();
                 FillGrid();
@@ -347,6 +361,7 @@ namespace Scripts.Managers
                         {
                             spriteRenderer.sortingOrder = _rows - row;
                         }
+
                         AssignGroupIcons();
                     }
                 }

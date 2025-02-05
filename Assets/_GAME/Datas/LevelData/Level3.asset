@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71ab6c691e504eb4918e1d4756eba496, type: 3}
   m_Name: Level3
   m_EditorClassIdentifier: 
+  targetScore: 4500
   allowedMoves: 30
   rows: 5
   columns: 7
