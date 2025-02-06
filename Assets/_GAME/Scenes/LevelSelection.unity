@@ -573,7 +573,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5a11f9265f3c60c4096e2e2a9f143080, type: 2}
   - {fileID: 11400000, guid: 121dc318e851255469e821bb8c47c255, type: 2}
   - {fileID: 11400000, guid: 0ecdffeffde46ff48a6fd8300031351f, type: 2}
-  - {fileID: 11400000, guid: 9e0d0133d5209484d9d37a5af1c511b8, type: 2}
+  - {fileID: 11400000, guid: 34c6f0802e303b5438ab368ff054ae19, type: 2}
   gameSceneName: GameScene
 --- !u!1 &542442276
 GameObject:

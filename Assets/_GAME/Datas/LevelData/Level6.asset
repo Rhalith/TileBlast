@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71ab6c691e504eb4918e1d4756eba496, type: 3}
   m_Name: Level6
   m_EditorClassIdentifier: 
+  levelNumber: 6
   targetScore: 6000
-  allowedMoves: 20
+  allowedMoves: 25
   rows: 6
   columns: 8
   numColors: 6

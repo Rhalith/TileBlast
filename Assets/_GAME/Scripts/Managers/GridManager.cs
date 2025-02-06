@@ -6,6 +6,7 @@ using Scripts.Level;
 using Scripts.Tiles;
 using Scripts.Utilities;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 namespace Scripts.Managers
@@ -17,6 +18,7 @@ namespace Scripts.Managers
         [SerializeField] private List<TileData> tileDataList;
         [SerializeField] private float fallDuration = 0.5f;
 
+        private int _levelIndex;
         private int _rows;
         private int _columns;
         private int _thresholdA;
@@ -47,6 +49,16 @@ namespace Scripts.Managers
         private void OnGameFinished(object sender, FinishGameEvent @event)
         {
             _isGameFinished = true;
+            if(@event.IsWin)
+            {
+                PlayerPrefs.SetInt("Level", _levelIndex);
+                Invoke(nameof(LoadLevelSelection), 3f);
+            }
+        }
+
+        private void LoadLevelSelection()
+        {
+            SceneManager.LoadScene("LevelSelection");
         }
 
         public void InitializeGrid(LevelData levelData)
@@ -57,6 +69,8 @@ namespace Scripts.Managers
                 return;
             }
 
+            _isGameFinished = false;
+            _levelIndex = levelData.LevelNumber;
             _rows = levelData.Rows;
             _columns = levelData.Columns;
             _thresholdA = levelData.GroupThresholdA;
@@ -146,7 +160,7 @@ namespace Scripts.Managers
             float prefabSizeX = tilePrefab.GetComponent<SpriteRenderer>().bounds.size.x;
             float prefabSizeY = tilePrefab.GetComponent<SpriteRenderer>().bounds.size.y;
 
-            float scaleFactor = 1.15f; // Increase this for a tighter fit (1.05 - 1.1)
+            float scaleFactor = 1.15f;
 
             tileObject.transform.localScale = new Vector3(
                 (_tileSize.x / prefabSizeX) * scaleFactor,
@@ -173,6 +187,7 @@ namespace Scripts.Managers
 
         private void OnTileClicked(object sender, TileClickedEvent @event)
         {
+            if(_isGameFinished) return;
             if (_allowedMoves <= 0)
             {
                 EventBus<FinishGameEvent>.Emit(this, new FinishGameEvent { IsWin = false });

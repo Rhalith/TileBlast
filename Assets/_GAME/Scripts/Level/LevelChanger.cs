@@ -19,12 +19,12 @@ namespace Scripts.Level
                 return;
             }
             
-            int unlockedLevel = PlayerPrefs.GetInt("Level", 1);
+            int unlockedLevel = PlayerPrefs.GetInt("Level", 0);
 
             for (int i = 0; i < levelButtons.Count; i++)
             {
                 Button button = levelButtons[i];
-                bool isUnlocked = i < unlockedLevel;
+                bool isUnlocked = i < unlockedLevel + 1;
                 button.interactable = isUnlocked;
 
                 if (isUnlocked)

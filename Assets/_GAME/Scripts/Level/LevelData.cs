@@ -6,6 +6,7 @@ namespace Scripts.Level
     [CreateAssetMenu(fileName = "NewLevelData", menuName = "Game/Level Data")]
     public class LevelData : ScriptableObject
     {
+        [SerializeField] private int levelNumber; // Level number
         [SerializeField] private float targetScore; // Target score
         [SerializeField] private int allowedMoves; // Number of moves allowed
         [SerializeField] private int rows; // Grid rows (M)
@@ -15,6 +16,7 @@ namespace Scripts.Level
         [SerializeField] private int groupThresholdB; // Threshold for second icon (B)
         [SerializeField] private int groupThresholdC; // Threshold for third icon (C)
         
+        public int LevelNumber => levelNumber;
         public float TargetScore => targetScore;
         public int AllowedMoves => allowedMoves;
         public int Rows => rows;
