@@ -18,17 +18,29 @@ namespace Scripts.Tiles
 
         private void OnEnable()
         {
-            EventBus<FinishGameEvent>.AddListener(ChangeTileStatus);
+            EventBus<FinishGameEvent>.AddListener(OnFinishGame);
+            EventBus<ToggleTileColliderEvent>.AddListener(OnToggleCollider);
         }
         
         private void OnDisable()
         {
-            EventBus<FinishGameEvent>.RemoveListener(ChangeTileStatus);
+            EventBus<FinishGameEvent>.RemoveListener(OnFinishGame);
+            EventBus<ToggleTileColliderEvent>.RemoveListener(OnToggleCollider);
         }
 
-        private void ChangeTileStatus(object sender, FinishGameEvent @event)
+        private void OnToggleCollider(object sender, ToggleTileColliderEvent @event)
         {
-            boxCollider.enabled = false;
+            ToggleCollider(@event.IsEnable);
+        }
+
+        private void OnFinishGame(object sender, FinishGameEvent @event)
+        {
+            ToggleCollider(false);
+        }
+        
+        private void ToggleCollider(bool isEnable)
+        {
+            boxCollider.enabled = isEnable;
         }
 
         private void OnMouseDown()

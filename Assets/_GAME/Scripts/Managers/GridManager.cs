@@ -49,7 +49,7 @@ namespace Scripts.Managers
         private void OnGameFinished(object sender, FinishGameEvent @event)
         {
             _isGameFinished = true;
-            if(@event.IsWin)
+            if (@event.IsWin)
             {
                 PlayerPrefs.SetInt("Level", _levelIndex);
                 Invoke(nameof(LoadLevelSelection), 3f);
@@ -81,10 +81,10 @@ namespace Scripts.Managers
 
             EventBus<ChangeMovementTextEvent>.Emit(this,
                 new ChangeMovementTextEvent { MovementCount = _allowedMoves, IsInitial = true });
-            
+
             EventBus<ChangeScoreTextEvent>.Emit(this,
                 new ChangeScoreTextEvent { ScoreChange = _targetScore, IsInitial = true });
-            
+
             if (tileDataList.Count > levelData.NumColors)
             {
                 tileDataList = tileDataList.GetRange(0, levelData.NumColors);
@@ -187,7 +187,7 @@ namespace Scripts.Managers
 
         private void OnTileClicked(object sender, TileClickedEvent @event)
         {
-            if(_isGameFinished) return;
+            if (_isGameFinished) return;
             if (_allowedMoves <= 0)
             {
                 EventBus<FinishGameEvent>.Emit(this, new FinishGameEvent { IsWin = false });
@@ -199,6 +199,10 @@ namespace Scripts.Managers
             if (group.Count >= 2)
             {
                 @event.ClickedTile.SpawnParticleEffect();
+                EventBus<PlaySoundEvent>.Emit(this,
+                    group.Count > 4
+                        ? new PlaySoundEvent { SoundType = SoundType.MultiClick }
+                        : new PlaySoundEvent { SoundType = SoundType.Click });
                 foreach (Tile tile in group)
                 {
                     _grid[tile.GridPosition.x, tile.GridPosition.y] = null;
@@ -207,11 +211,11 @@ namespace Scripts.Managers
 
                 EventBus<ChangeScoreTextEvent>.Emit(this,
                     new ChangeScoreTextEvent { ScoreChange = group.Count * 100 });
-                
+
                 _allowedMoves--;
                 EventBus<ChangeMovementTextEvent>.Emit(this,
                     new ChangeMovementTextEvent { MovementCount = _allowedMoves });
-                if(_allowedMoves <= 0 && !_isGameFinished)
+                if (_allowedMoves <= 0 && !_isGameFinished)
                 {
                     EventBus<FinishGameEvent>.Emit(this, new FinishGameEvent { IsWin = false });
                 }
