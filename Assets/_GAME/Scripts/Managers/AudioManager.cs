@@ -245,7 +245,6 @@ namespace Scripts.Managers
         /// </summary>
         public void ToggleMusicMute()
         {
-            Debug.Log("Toggling music mute");
             _isMusicMuted = !_isMusicMuted;
             _musicSource.mute = _isMusicMuted;
             _musicSource.volume = _isMusicMuted ? 0f : _musicVolume;
@@ -257,7 +256,6 @@ namespace Scripts.Managers
         /// </summary>
         public void ToggleSFXMute()
         {
-            Debug.Log("Toggling SFX mute");
             _isSFXMuted = !_isSFXMuted;
             foreach (var source in _audioSources)
             {
