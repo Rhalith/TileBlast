@@ -218,6 +218,8 @@ namespace Scripts.Managers
                 if (_allowedMoves <= 0 && !_isGameFinished)
                 {
                     EventBus<FinishGameEvent>.Emit(this, new FinishGameEvent { IsWin = false });
+                    EventBus<PlaySoundEvent>.Emit(this, new PlaySoundEvent { SoundType = SoundType.Lose });
+                    Invoke(nameof(LoadLevelSelection), 3f);
                 }
 
                 CollapseGrid();

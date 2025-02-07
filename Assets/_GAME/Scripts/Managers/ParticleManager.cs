@@ -37,6 +37,7 @@ namespace Scripts.Managers
         {
             if (@event.IsWin)
             {
+                EventBus<PlaySoundEvent>.Emit(this, new PlaySoundEvent { SoundType = SoundType.Win });
                 PlayWinParticles();
             }
         }

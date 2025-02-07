@@ -1385,8 +1385,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backgroundMusic: {fileID: 8300000, guid: cc553a88c95ccd941be1e77cccc44cc8, type: 3}
-  winSound: {fileID: 8300000, guid: ccae00c13a728784bb05cfb0040c54d3, type: 3}
-  loseSound: {fileID: 8300000, guid: 5a991da3204d1064fa5f120d9f7efd9b, type: 3}
+  winSound: {fileID: 8300000, guid: 59369cea2bd8a7349b6c69985b5c6c12, type: 3}
+  loseSound: {fileID: 8300000, guid: 1028d0c00f4136340a36404bb9aabe2a, type: 3}
   clickSound: {fileID: 8300000, guid: c3dc802b447314c1c9fe381f74ba24bd, type: 3}
   multiClickSound: {fileID: 8300000, guid: 04441513fb2e2064cab62aa8ad5586b6, type: 3}
 --- !u!1 &1551063237
