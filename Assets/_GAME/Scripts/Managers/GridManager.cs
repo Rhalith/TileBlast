@@ -266,6 +266,9 @@ namespace Scripts.Managers
                 {
                     _grid[row, col] = allTiles[index];
                     _grid[row, col].GridPosition = new Vector2Int(row, col);
+
+                    _grid[row, col].name = $"{row} {col}";
+                    _grid[row, col].GetComponent<SpriteRenderer>().sortingOrder = _rows - row;
                     _grid[row, col].transform.DOMove(GetWorldPosition(row, col), fallDuration);
                     index++;
                 }
@@ -273,6 +276,7 @@ namespace Scripts.Managers
 
             AssignGroupIcons();
         }
+
 
         private void AssignGroupIcons()
         {
