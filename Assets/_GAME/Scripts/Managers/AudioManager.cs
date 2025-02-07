@@ -5,38 +5,111 @@ using UnityEngine;
 
 namespace Scripts.Managers
 {
+    /// <summary>
+    /// Manages audio playback for background music and sound effects.
+    /// This singleton handles sound events, audio source pooling, volume controls, and saving/loading audio settings.
+    /// </summary>
     public class AudioManager : MonoBehaviour
     {
+        #region Serialized Fields
+
+        [Header("Audio Clips")]
+        [Tooltip("Background music clip played continuously.")]
         [SerializeField] private AudioClip backgroundMusic;
+
+        [Tooltip("Sound clip for win events.")]
         [SerializeField] private AudioClip winSound;
+
+        [Tooltip("Sound clip for lose events.")]
         [SerializeField] private AudioClip loseSound;
+
+        [Tooltip("Sound clip for button click events.")]
         [SerializeField] private AudioClip clickSound;
+
+        [Tooltip("Sound clip for multiple rapid click events.")]
         [SerializeField] private AudioClip multiClickSound;
 
+        #endregion
+
+        #region Private Fields
+
+        /// <summary>
+        /// Pool of audio sources used for playing sound effects.
+        /// </summary>
         private List<AudioSource> _audioSources = new ();
+
+        /// <summary>
+        /// Audio source dedicated to background music.
+        /// </summary>
         private AudioSource _musicSource;
 
+        /// <summary>
+        /// Current volume level for background music.
+        /// </summary>
         private float _musicVolume = 1f;
+
+        /// <summary>
+        /// Current volume level for sound effects.
+        /// </summary>
         private float _sfxVolume = 1f;
+
+        /// <summary>
+        /// Indicates whether the background music is muted.
+        /// </summary>
         private bool _isMusicMuted;
+
+        /// <summary>
+        /// Indicates whether the sound effects are muted.
+        /// </summary>
         private bool _isSFXMuted;
 
+        #endregion
+
+        #region Public Properties
+
+        /// <summary>
+        /// Singleton instance of the AudioManager.
+        /// </summary>
         public static AudioManager Instance { get; private set; }
 
+        /// <summary>
+        /// Gets the current music volume.
+        /// </summary>
         public float MusicVolume => _musicVolume;
 
+        /// <summary>
+        /// Gets the current sound effects volume.
+        /// </summary>
         public float SFXVolume => _sfxVolume;
+
+        /// <summary>
+        /// Gets a value indicating whether the background music is muted.
+        /// </summary>
         public bool IsMusicMuted => _isMusicMuted;
+
+        /// <summary>
+        /// Gets a value indicating whether the sound effects are muted.
+        /// </summary>
         public bool IsSfxMuted => _isSFXMuted;
-        
+
+        #endregion
+
+        #region Unity Methods
+
         private void Awake()
         {
             if (Instance == null)
             {
                 Instance = this;
                 DontDestroyOnLoad(gameObject);
+
+                // Clear any previous settings to ensure a fresh start.
                 ClearSoundSettings();
+
+                // Initialize audio sources for music and SFX.
                 InitializeAudioSources();
+
+                // Load saved audio settings.
                 LoadSoundSettings();
             }
             else
@@ -47,16 +120,26 @@ namespace Scripts.Managers
 
         private void OnEnable()
         {
+            // Subscribe to play sound events.
             EventBus<PlaySoundEvent>.AddListener(PlaySound);
         }
 
         private void OnDisable()
         {
+            // Unsubscribe from play sound events.
             EventBus<PlaySoundEvent>.RemoveListener(PlaySound);
         }
 
+        #endregion
+
+        #region Audio Initialization and Playback
+
+        /// <summary>
+        /// Initializes the audio sources for background music and sound effects.
+        /// </summary>
         private void InitializeAudioSources()
         {
+            // Create and configure the background music source.
             _musicSource = gameObject.AddComponent<AudioSource>();
             _musicSource.loop = true;
             _musicSource.clip = backgroundMusic;
@@ -64,7 +147,8 @@ namespace Scripts.Managers
             _musicSource.mute = _isMusicMuted;
             _musicSource.Play();
 
-            for (int i = 0; i < 5; i++) // Pooling 5 audio sources for simultaneous sounds
+            // Create a pool of audio sources for simultaneous sound effects.
+            for (int i = 0; i < 5; i++)
             {
                 Debug.Log("isSFXMuted: " + _isSFXMuted);
                 AudioSource source = gameObject.AddComponent<AudioSource>();
@@ -74,6 +158,11 @@ namespace Scripts.Managers
             }
         }
 
+        /// <summary>
+        /// Handles the play sound event by playing the appropriate clip.
+        /// </summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="event">The PlaySoundEvent containing sound type information.</param>
         private void PlaySound(object sender, PlaySoundEvent @event)
         {
             if (_isSFXMuted) return;
@@ -85,6 +174,11 @@ namespace Scripts.Managers
             }
         }
 
+        /// <summary>
+        /// Retrieves the audio clip corresponding to the given sound type.
+        /// </summary>
+        /// <param name="soundType">The type of sound to retrieve.</param>
+        /// <returns>The associated AudioClip, or null if not defined.</returns>
         private AudioClip GetClip(SoundType soundType)
         {
             return soundType switch
@@ -93,15 +187,21 @@ namespace Scripts.Managers
                 SoundType.Lose => loseSound,
                 SoundType.Click => clickSound,
                 SoundType.MultiClick => multiClickSound,
-                _ => null
+                _ => null,
             };
         }
 
+        /// <summary>
+        /// Plays the specified audio clip using an available audio source.
+        /// </summary>
+        /// <param name="clip">The audio clip to play.</param>
         private void PlayClip(AudioClip clip)
         {
+            // Try to find an audio source that is not currently playing.
             AudioSource availableSource = _audioSources.Find(source => !source.isPlaying);
             if (availableSource == null)
             {
+                // If none are available, create a new audio source and add it to the pool.
                 availableSource = gameObject.AddComponent<AudioSource>();
                 _audioSources.Add(availableSource);
             }
@@ -111,7 +211,14 @@ namespace Scripts.Managers
             availableSource.Play();
         }
 
-        // --- SOUND CONTROL METHODS ---
+        #endregion
+
+        #region Sound Control Methods
+
+        /// <summary>
+        /// Sets the background music volume and updates the audio source.
+        /// </summary>
+        /// <param name="volume">Volume level (0.0 to 1.0).</param>
         public void SetMusicVolume(float volume)
         {
             _musicVolume = Mathf.Clamp(volume, 0f, 1f);
@@ -119,6 +226,10 @@ namespace Scripts.Managers
             SaveSoundSettings();
         }
 
+        /// <summary>
+        /// Sets the sound effects volume and updates all SFX audio sources.
+        /// </summary>
+        /// <param name="volume">Volume level (0.0 to 1.0).</param>
         public void SetSFXVolume(float volume)
         {
             _sfxVolume = Mathf.Clamp(volume, 0f, 1f);
@@ -129,6 +240,9 @@ namespace Scripts.Managers
             SaveSoundSettings();
         }
 
+        /// <summary>
+        /// Toggles the mute state of the background music.
+        /// </summary>
         public void ToggleMusicMute()
         {
             Debug.Log("Toggling music mute");
@@ -138,6 +252,9 @@ namespace Scripts.Managers
             SaveSoundSettings();
         }
 
+        /// <summary>
+        /// Toggles the mute state of the sound effects.
+        /// </summary>
         public void ToggleSFXMute()
         {
             Debug.Log("Toggling SFX mute");
@@ -150,6 +267,13 @@ namespace Scripts.Managers
             SaveSoundSettings();
         }
 
+        #endregion
+
+        #region Settings Persistence
+
+        /// <summary>
+        /// Saves the current sound settings to PlayerPrefs.
+        /// </summary>
         private void SaveSoundSettings()
         {
             PlayerPrefs.SetFloat("MusicVolume", _musicVolume);
@@ -159,6 +283,9 @@ namespace Scripts.Managers
             PlayerPrefs.Save();
         }
 
+        /// <summary>
+        /// Loads saved sound settings from PlayerPrefs and applies them.
+        /// </summary>
         private void LoadSoundSettings()
         {
             _musicVolume = PlayerPrefs.GetFloat("MusicVolume", 1f);
@@ -174,7 +301,10 @@ namespace Scripts.Managers
                 source.mute = _isSFXMuted;
             }
         }
-        
+
+        /// <summary>
+        /// Clears previously saved sound settings from PlayerPrefs.
+        /// </summary>
         private void ClearSoundSettings()
         {
             PlayerPrefs.DeleteKey("MusicVolume");
@@ -183,8 +313,13 @@ namespace Scripts.Managers
             PlayerPrefs.DeleteKey("SFXMuted");
             PlayerPrefs.Save();
         }
+
+        #endregion
     }
 
+    /// <summary>
+    /// Enum defining different types of sound effects.
+    /// </summary>
     public enum SoundType
     {
         Win,
