@@ -80,6 +80,13 @@ The project is organized into several namespaces:
 - **DOTween:** For animations
 - **Unity's built-in UI system**
 
+## In-Game Screenshots
+<img src="https://github.com/user-attachments/assets/0d7ac0c1-a34e-4974-98c8-d7bcb9d8d1ea" alt="image" width="350">
+<img src="https://github.com/user-attachments/assets/2bbbf43b-9206-42bc-b25a-915d55d4a91c" alt="image" width="350">
+
+<img src="https://github.com/user-attachments/assets/1a58d76c-5564-4be8-b1e0-224a856a0e91" alt="image" width="350">
+<img src="https://github.com/user-attachments/assets/ef5c2018-2844-4ed6-89ba-9ddfa1ad183c" alt="image" width="350">
+
 ## Contributing
 
 Contributions are welcome! If you wish to improve the project, please follow these steps:
