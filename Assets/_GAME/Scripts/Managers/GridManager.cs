@@ -79,8 +79,11 @@ namespace Scripts.Managers
             _isGameFinished = true;
             if (e.IsWin)
             {
-                // Save the last completed level.
-                PlayerPrefs.SetInt("Level", _levelIndex);
+                // Save the current level if the player wins.
+                if (PlayerPrefs.GetInt("Level") < _levelIndex)
+                {
+                    PlayerPrefs.SetInt("Level", _levelIndex);
+                }
                 // Load the level selection scene after 3 seconds.
                 Invoke(nameof(LoadLevelSelection), 3f);
             }
